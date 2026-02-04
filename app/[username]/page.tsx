@@ -55,7 +55,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
   }
 
   const { profile, links } = data
-  const theme = themes[profile.theme || 'minimal']
+  const theme = themes[(profile.theme as ThemeKey) || 'minimal']
 
   // Track view (fire and forget)
   trackView(params.username).catch(() => {})
