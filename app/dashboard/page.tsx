@@ -47,7 +47,17 @@ type AppUser = {
   }, [])
 
   const checkUser = async () => {
-  const { data: { user } } = await supabase.auth.getUser()
+useEffect(() => {
+  const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
+    if (!session?.user) router.push('/')
+    else setUser({
+      id: session.user.id,
+      email: session.user.email ?? undefined
+    })
+  })
+
+  return () => listener.subscription.unsubscribe()
+}, [])
   
   if (!user) {
     router.push('/')
@@ -188,19 +198,19 @@ type AppUser = {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900">
-      {/* Header */}
-      <header className="border-b border-white/10 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Sparkles className="w-8 h-8 text-purple-400" />
-              <span className="text-2xl font-bold text-white">Silovra</span>
-            </div>
-            <div className="flex items-center space-x-4">
-              {username && (
-                <button
-                  onClick={copyProfileLink}
+        <div className="min-h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900">
+          {/* Header */}
+          <header className="border-b border-white/10 backdrop-blur-sm sticky top-0 z-50">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Sparkles className="w-8 h-8 text-purple-400" />
+                  <span className="text-2xl font-bold text-white">Silovra</span>
+                </div>
+                <div className="flex items-center space-x-4">
+                  {username && (
+                    <button
+                      onClick={copyProfileLink}
                   className="flex items-center space-x-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-white transition-colors"
                 >
                   <Copy className="w-4 h-4" />
@@ -432,10 +442,14 @@ type AppUser = {
                       onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
                       className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
                       placeholder="yourname"
-                    />
-                    <p className="text-sm text-gray-400 mt-2">
-                      Your page: {window.location.origin}/{username || 'yourname'}
-                    </p>
+                    /> 
+
+                    {typeof window !== 'undefined' && (
+                      <p className="text-sm text-gray-400 mt-2">
+                        Your page: {window.location.origin}/{username || 'yourname'}
+                      </p>
+                    )}
+
                   </div>
 
                   <div>

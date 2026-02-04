@@ -116,7 +116,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
                 await fetch('/api/track-click', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ 
+                 body: JSON.stringify({ 
                     username: params.username,
                     linkId: link.id,
                   }),
