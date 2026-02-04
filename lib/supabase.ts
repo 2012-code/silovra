@@ -1,11 +1,10 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+// Temporary hardcoded values for testing
+const supabaseUrl = 'https://svwnjwwimmzeozxbqvdf.supabase.co'
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN2d25qd3dpbW16ZW96eGJxdmRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxNDkzNjcsImV4cCI6MjA4NTcyNTM2N30.0h4xSR9mENuEDz_HxFRRy5HAvi9PTEXUIN0z7F7JwBQ'
+const serviceRoleKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN2d25qd3dpbW16ZW96eGJxdmRmIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MDE0OTM2NywiZXhwIjoyMDg1NzI1MzY3fQ.1hZ8vl00_6d8HFl2UccLYUX9KnSJ4tu-0NsJOjLptxo'
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-export const supabaseAdmin = createClient(
-  supabaseUrl,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+export const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey)
