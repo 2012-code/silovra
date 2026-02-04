@@ -6,11 +6,7 @@ import { useRouter } from 'next/navigation'
 import { LogOut, Plus, Trash2, Eye, BarChart3, Settings, Crown, ExternalLink, Copy, Sparkles } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { themes, ThemeKey } from '@/lib/themes'
-
-interface User {
-  id: string
-  email: string | undefined
-}
+import type { User } from '@supabase/auth-js'
 
 interface Link {
   id: string
