@@ -24,7 +24,10 @@ interface Profile {
 }
 
 export default function Dashboard() {
-  const [user, setUser] = useState<User | null>(null)
+type AppUser = {
+  id: string
+  email?: string }
+  const [user, setUser] = useState<AppUser | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
   const [links, setLinks] = useState<Link[]>([])
   const [loading, setLoading] = useState(true)
@@ -44,18 +47,24 @@ export default function Dashboard() {
   }, [])
 
   const checkUser = async () => {
-    const { data: { user } } = await supabase.auth.getUser()
-    
-    if (!user) {
-      router.push('/')
-      return
-    }
-
-    setUser(user)
-    await loadProfile(user.id)
-    await loadLinks(user.id)
-    setLoading(false)
+  const { data: { user } } = await supabase.auth.getUser()
+  
+  if (!user) {
+    router.push('/')
+    return
   }
+
+  // حول Supabase User → AppUser
+  setUser({
+    id: user.id,
+    email: user.email ?? undefined
+  })
+
+  await loadProfile(user.id)
+  await loadLinks(user.id)
+  setLoading(false)
+}
+
 
   const loadProfile = async (userId: string) => {
     const { data, error } = await supabase
