@@ -9,7 +9,7 @@ import { themes, ThemeKey } from '@/lib/themes'
 
 interface User {
   id: string
-  email: string
+  email: string | undefined
 }
 
 interface Link {
