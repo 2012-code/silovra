@@ -11,6 +11,7 @@ export const themes = {
       buttonHover: 'rgba(255, 255, 255, 0.3)',
       profileBg: 'rgba(255, 255, 255, 0.1)',
       animation: 'fade-in',
+      boxShadow: 'none',
     }
   },
   gradient: {
@@ -25,6 +26,7 @@ export const themes = {
       buttonHover: 'rgba(255, 255, 255, 0.35)',
       profileBg: 'rgba(255, 255, 255, 0.15)',
       animation: 'slide-up',
+      boxShadow: 'none',
     }
   },
   neon: {
@@ -54,6 +56,7 @@ export const themes = {
       buttonHover: 'rgba(255, 255, 255, 0.3)',
       profileBg: 'rgba(255, 255, 255, 0.1)',
       animation: 'fade-in',
+      boxShadow: 'none',
     }
   },
   sunset: {
@@ -68,6 +71,7 @@ export const themes = {
       buttonHover: 'rgba(255, 255, 255, 0.35)',
       profileBg: 'rgba(255, 255, 255, 0.15)',
       animation: 'slide-up',
+      boxShadow: 'none',
     }
   },
   forest: {
@@ -82,6 +86,7 @@ export const themes = {
       buttonHover: 'rgba(255, 255, 255, 0.3)',
       profileBg: 'rgba(255, 255, 255, 0.1)',
       animation: 'fade-in',
+      boxShadow: 'none',
     }
   },
   rose: {
