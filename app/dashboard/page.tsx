@@ -39,7 +39,8 @@ export default function Dashboard() {
   const [username, setUsername] = useState('')
   const [bio, setBio] = useState('')
   const [selectedTheme, setSelectedTheme] = useState<ThemeKey>('emerald')
-  
+  const [selectedTheme, setSelectedTheme] = useState<ThemeKey>('emerald')
+  const currentTheme = currentTheme || themes.emerald  // ADD THIS LINE
   const router = useRouter()
 
   useEffect(() => {
@@ -537,15 +538,15 @@ export default function Dashboard() {
                 <div className="aspect-[9/16] max-w-[280px] mx-auto bg-white/10 rounded-3xl overflow-hidden shadow-2xl">
                   <div 
                     className="h-full p-8 flex flex-col items-center justify-center"
-                    style={{ background: themes[selectedTheme].styles.background }}
+                    style={{ background: currentTheme.styles.background }}
                   >
                     {/* Profile Section */}
                     <div className="mb-8 text-center">
                       <div 
                         className="w-20 h-20 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold"
                         style={{ 
-                          background: themes[selectedTheme].styles.profileBg,
-                          color: themes[selectedTheme].styles.buttonText,
+                          background: currentTheme.styles.profileBg,
+                          color: currentTheme.styles.buttonText,
                         }}
                       >
                         {username ? username.charAt(0).toUpperCase() : '?'}
@@ -568,11 +569,11 @@ export default function Dashboard() {
                         links.slice(0, 4).map((link, index) => (
                           <div
                             key={link.id}
-                            className={`w-full px-4 py-3 rounded-xl text-white text-center font-medium transition-all animate-${themes[selectedTheme].styles.animation}`}
+                            className={`w-full px-4 py-3 rounded-xl text-white text-center font-medium transition-all animate-${currentTheme.styles.animation}`}
                             style={{
-                              background: themes[selectedTheme].styles.buttonBg,
-                              border: themes[selectedTheme].styles.buttonBorder,
-                              boxShadow: themes[selectedTheme].styles.boxShadow,
+                              background: currentTheme.styles.buttonBg,
+                              border: currentTheme.styles.buttonBorder,
+                              boxShadow: currentTheme.styles.boxShadow,
                               animationDelay: `${index * 0.1}s`,
                             }}
                           >
