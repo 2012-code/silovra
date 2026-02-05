@@ -5,29 +5,26 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
 
-    // Gumroad sends different events
-    // https://help.gumroad.com/article/266-gumroad-ping
-    
+    // Handle successful sale
     if (body.sale_id) {
-      // This is a sale notification
       const email = body.email
       const productPermalink = body.product_permalink
 
-      // Verify it's the right product
-      if (productPermalink !== process.env.NEXT_PUBLIC_GUMROAD_PRODUCT_PERMALINK) {
+      // Verify correct product
+      if (productPermalink !== 'silovra-pro') {
         return NextResponse.json({ error: 'Invalid product' }, { status: 400 })
       }
 
       // Find user by email
-      const { data: user } = await supabaseAdmin.auth.admin.listUsers()
-      const targetUser = user.users.find(u => u.email === email)
+      const { data: users } = await supabaseAdmin.auth.admin.listUsers()
+      const targetUser = users?.users.find(u => u.email === email)
 
       if (!targetUser) {
-        console.log('User not found for email:', email)
+        console.log('User not found:', email)
         return NextResponse.json({ error: 'User not found' }, { status: 404 })
       }
 
-      // Update user to Pro
+      // Upgrade to Pro
       await supabaseAdmin
         .from('profiles')
         .update({ 
@@ -41,11 +38,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: true })
     }
 
-    // Handle refunds
+    // Handle refunds/disputes/chargebacks
     if (body.refunded === 'true' || body.disputed === 'true' || body.chargebacked === 'true') {
       const saleId = body.sale_id
 
-      // Downgrade user
       await supabaseAdmin
         .from('profiles')
         .update({ 
@@ -54,7 +50,7 @@ export async function POST(req: NextRequest) {
         })
         .eq('gumroad_sale_id', saleId)
 
-      console.log('User downgraded from Pro:', saleId)
+      console.log('User downgraded:', saleId)
       return NextResponse.json({ success: true })
     }
 
@@ -62,7 +58,7 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error('Gumroad webhook error:', error)
     return NextResponse.json(
-      { error: error.message || 'Webhook handler failed' },
+      { error: error.message || 'Webhook failed' },
       { status: 500 }
     )
   }

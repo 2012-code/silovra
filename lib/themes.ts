@@ -1,47 +1,50 @@
-export const themes = {
-  minimal: {
-    name: 'Minimal',
-    preview: '🎨',
+export interface ThemeStyles {
+  background: string
+  buttonBg: string
+  buttonBorder: string
+  buttonText: string
+  buttonHover: string
+  profileBg: string
+  animation: string
+  boxShadow: string
+}
+
+export interface Theme {
+  name: string
+  preview: string
+  free: boolean
+  styles: ThemeStyles
+}
+
+export const themes: Record<string, Theme> = {
+  emerald: {
+    name: 'Emerald',
+    preview: '💎',
     free: true,
     styles: {
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      buttonBg: 'rgba(255, 255, 255, 0.2)',
+      background: 'linear-gradient(135deg, #134e4a 0%, #14b8a6 100%)',
+      buttonBg: 'rgba(255, 255, 255, 0.15)',
       buttonBorder: '2px solid rgba(255, 255, 255, 0.3)',
       buttonText: '#ffffff',
-      buttonHover: 'rgba(255, 255, 255, 0.3)',
+      buttonHover: 'rgba(255, 255, 255, 0.25)',
       profileBg: 'rgba(255, 255, 255, 0.1)',
       animation: 'fade-in',
       boxShadow: 'none',
     }
   },
-  gradient: {
-    name: 'Gradient',
-    preview: '🌈',
+  coral: {
+    name: 'Coral',
+    preview: '🧡',
     free: true,
     styles: {
-      background: 'linear-gradient(to right, #fa709a 0%, #fee140 100%)',
-      buttonBg: 'rgba(255, 255, 255, 0.25)',
-      buttonBorder: '2px solid rgba(255, 255, 255, 0.4)',
+      background: 'linear-gradient(135deg, #fb923c 0%, #f97316 100%)',
+      buttonBg: 'rgba(255, 255, 255, 0.2)',
+      buttonBorder: '2px solid rgba(255, 255, 255, 0.35)',
       buttonText: '#ffffff',
-      buttonHover: 'rgba(255, 255, 255, 0.35)',
+      buttonHover: 'rgba(255, 255, 255, 0.3)',
       profileBg: 'rgba(255, 255, 255, 0.15)',
       animation: 'slide-up',
       boxShadow: 'none',
-    }
-  },
-  neon: {
-    name: 'Neon',
-    preview: '⚡',
-    free: true,
-    styles: {
-      background: 'linear-gradient(135deg, #000000 0%, #434343 100%)',
-      buttonBg: 'rgba(139, 92, 246, 0.3)',
-      buttonBorder: '2px solid #8b5cf6',
-      buttonText: '#ffffff',
-      buttonHover: 'rgba(139, 92, 246, 0.5)',
-      profileBg: 'rgba(139, 92, 246, 0.2)',
-      animation: 'bounce-in',
-      boxShadow: '0 0 20px rgba(139, 92, 246, 0.5)',
     }
   },
   ocean: {
@@ -49,13 +52,13 @@ export const themes = {
     preview: '🌊',
     free: true,
     styles: {
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      buttonBg: 'rgba(255, 255, 255, 0.2)',
+      background: 'linear-gradient(135deg, #0891b2 0%, #06b6d4 100%)',
+      buttonBg: 'rgba(255, 255, 255, 0.15)',
       buttonBorder: '2px solid rgba(255, 255, 255, 0.3)',
       buttonText: '#ffffff',
-      buttonHover: 'rgba(255, 255, 255, 0.3)',
+      buttonHover: 'rgba(255, 255, 255, 0.25)',
       profileBg: 'rgba(255, 255, 255, 0.1)',
-      animation: 'fade-in',
+      animation: 'bounce-in',
       boxShadow: 'none',
     }
   },
@@ -64,13 +67,28 @@ export const themes = {
     preview: '🌅',
     free: true,
     styles: {
-      background: 'linear-gradient(to top, #ff9a56 0%, #ff6a88 55%, #ff99ac 100%)',
-      buttonBg: 'rgba(255, 255, 255, 0.25)',
-      buttonBorder: '2px solid rgba(255, 255, 255, 0.4)',
+      background: 'linear-gradient(to top, #f97316 0%, #fb923c 50%, #fbbf24 100%)',
+      buttonBg: 'rgba(255, 255, 255, 0.2)',
+      buttonBorder: '2px solid rgba(255, 255, 255, 0.35)',
       buttonText: '#ffffff',
-      buttonHover: 'rgba(255, 255, 255, 0.35)',
+      buttonHover: 'rgba(255, 255, 255, 0.3)',
       profileBg: 'rgba(255, 255, 255, 0.15)',
-      animation: 'slide-up',
+      animation: 'scale-in',
+      boxShadow: 'none',
+    }
+  },
+  midnight: {
+    name: 'Midnight',
+    preview: '🌙',
+    free: true,
+    styles: {
+      background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+      buttonBg: 'rgba(20, 184, 166, 0.2)',
+      buttonBorder: '2px solid rgba(20, 184, 166, 0.4)',
+      buttonText: '#ffffff',
+      buttonHover: 'rgba(20, 184, 166, 0.3)',
+      profileBg: 'rgba(20, 184, 166, 0.1)',
+      animation: 'fade-in',
       boxShadow: 'none',
     }
   },
@@ -79,74 +97,75 @@ export const themes = {
     preview: '🌲',
     free: true,
     styles: {
-      background: 'linear-gradient(120deg, #134e5e 0%, #71b280 100%)',
-      buttonBg: 'rgba(255, 255, 255, 0.2)',
-      buttonBorder: '2px solid rgba(255, 255, 255, 0.3)',
-      buttonText: '#ffffff',
-      buttonHover: 'rgba(255, 255, 255, 0.3)',
-      profileBg: 'rgba(255, 255, 255, 0.1)',
-      animation: 'fade-in',
-      boxShadow: 'none',
-    }
-  },
-  rose: {
-    name: 'Rose Gold',
-    preview: '🌹',
-    free: false,
-    styles: {
-      background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-      buttonBg: 'rgba(255, 255, 255, 0.25)',
-      buttonBorder: '2px solid rgba(255, 255, 255, 0.4)',
-      buttonText: '#ffffff',
-      buttonHover: 'rgba(255, 255, 255, 0.35)',
-      profileBg: 'rgba(255, 255, 255, 0.15)',
-      animation: 'bounce-in',
-      boxShadow: '0 5px 15px rgba(245, 87, 108, 0.3)',
-    }
-  },
-  midnight: {
-    name: 'Midnight',
-    preview: '🌙',
-    free: false,
-    styles: {
-      background: 'linear-gradient(to top, #09203f 0%, #537895 100%)',
+      background: 'linear-gradient(120deg, #065f46 0%, #10b981 100%)',
       buttonBg: 'rgba(255, 255, 255, 0.15)',
-      buttonBorder: '2px solid rgba(255, 255, 255, 0.25)',
+      buttonBorder: '2px solid rgba(255, 255, 255, 0.3)',
       buttonText: '#ffffff',
       buttonHover: 'rgba(255, 255, 255, 0.25)',
       profileBg: 'rgba(255, 255, 255, 0.1)',
-      animation: 'float',
-      boxShadow: '0 5px 15px rgba(0, 0, 0, 0.3)',
+      animation: 'slide-up',
+      boxShadow: 'none',
     }
   },
-  candy: {
-    name: 'Candy',
-    preview: '🍭',
+  // PRO THEMES
+  ruby: {
+    name: 'Ruby',
+    preview: '💎',
     free: false,
     styles: {
-      background: 'linear-gradient(to right, #ff9a9e 0%, #fecfef 50%, #fda085 100%)',
-      buttonBg: 'rgba(255, 255, 255, 0.3)',
-      buttonBorder: '2px solid rgba(255, 255, 255, 0.5)',
-      buttonText: '#ffffff',
-      buttonHover: 'rgba(255, 255, 255, 0.4)',
-      profileBg: 'rgba(255, 255, 255, 0.2)',
-      animation: 'bounce-in',
-      boxShadow: '0 5px 15px rgba(255, 154, 158, 0.3)',
-    }
-  },
-  cosmic: {
-    name: 'Cosmic',
-    preview: '✨',
-    free: false,
-    styles: {
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+      background: 'linear-gradient(135deg, #be123c 0%, #f43f5e 100%)',
       buttonBg: 'rgba(255, 255, 255, 0.2)',
       buttonBorder: '2px solid rgba(255, 255, 255, 0.35)',
       buttonText: '#ffffff',
       buttonHover: 'rgba(255, 255, 255, 0.3)',
       profileBg: 'rgba(255, 255, 255, 0.15)',
-      animation: 'float',
-      boxShadow: '0 0 30px rgba(102, 126, 234, 0.4)',
+      animation: 'bounce-in',
+      boxShadow: '0 5px 20px rgba(244, 63, 94, 0.3)',
+    }
+  },
+  sapphire: {
+    name: 'Sapphire',
+    preview: '💠',
+    free: false,
+    styles: {
+      background: 'linear-gradient(135deg, #1e40af 0%, #3b82f6 100%)',
+      buttonBg: 'rgba(255, 255, 255, 0.2)',
+      buttonBorder: '2px solid rgba(255, 255, 255, 0.35)',
+      buttonText: '#ffffff',
+      buttonHover: 'rgba(255, 255, 255, 0.3)',
+      profileBg: 'rgba(255, 255, 255, 0.15)',
+      animation: 'scale-in',
+      boxShadow: '0 5px 20px rgba(59, 130, 246, 0.3)',
+    }
+  },
+  amethyst: {
+    name: 'Amethyst',
+    preview: '🔮',
+    free: false,
+    styles: {
+      background: 'linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)',
+      buttonBg: 'rgba(255, 255, 255, 0.2)',
+      buttonBorder: '2px solid rgba(255, 255, 255, 0.35)',
+      buttonText: '#ffffff',
+      buttonHover: 'rgba(255, 255, 255, 0.3)',
+      profileBg: 'rgba(255, 255, 255, 0.15)',
+      animation: 'bounce-in',
+      boxShadow: '0 5px 20px rgba(168, 85, 247, 0.3)',
+    }
+  },
+  gold: {
+    name: 'Gold',
+    preview: '✨',
+    free: false,
+    styles: {
+      background: 'linear-gradient(135deg, #a16207 0%, #eab308 100%)',
+      buttonBg: 'rgba(255, 255, 255, 0.2)',
+      buttonBorder: '2px solid rgba(255, 255, 255, 0.35)',
+      buttonText: '#ffffff',
+      buttonHover: 'rgba(255, 255, 255, 0.3)',
+      profileBg: 'rgba(255, 255, 255, 0.15)',
+      animation: 'scale-in',
+      boxShadow: '0 5px 20px rgba(234, 179, 8, 0.3)',
     }
   },
 }

@@ -1,110 +1,108 @@
--- Create profiles table
-create table if not exists public.profiles (
-  id uuid references auth.users(id) on delete cascade primary key,
-  username text unique,
-  bio text,
-  avatar_url text,
-  theme text default 'minimal',
-  is_pro boolean default false,
-  gumroad_sale_id text,
-  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
-  updated_at timestamp with time zone default timezone('utc'::text, now()) not null
+-- Profiles table
+CREATE TABLE IF NOT EXISTS public.profiles (
+  id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
+  username TEXT UNIQUE,
+  bio TEXT,
+  avatar_url TEXT,
+  theme TEXT DEFAULT 'emerald',
+  is_pro BOOLEAN DEFAULT false,
+  gumroad_sale_id TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+  updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
 
--- Create links table
-create table if not exists public.links (
-  id uuid default gen_random_uuid() primary key,
-  user_id uuid references auth.users(id) on delete cascade not null,
-  title text not null,
-  url text not null,
-  "order" integer not null default 0,
-  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+-- Links table
+CREATE TABLE IF NOT EXISTS public.links (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  title TEXT NOT NULL,
+  url TEXT NOT NULL,
+  "order" INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
 
--- Create analytics table
-create table if not exists public.analytics (
-  id uuid default gen_random_uuid() primary key,
-  username text not null,
-  link_id uuid references public.links(id) on delete cascade,
-  type text not null, -- 'view' or 'click'
-  timestamp timestamp with time zone default timezone('utc'::text, now()) not null
+-- Analytics table
+CREATE TABLE IF NOT EXISTS public.analytics (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  username TEXT NOT NULL,
+  link_id UUID REFERENCES public.links(id) ON DELETE CASCADE,
+  type TEXT NOT NULL,
+  timestamp TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
 
 -- Enable Row Level Security
-alter table public.profiles enable row level security;
-alter table public.links enable row level security;
-alter table public.analytics enable row level security;
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.links ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.analytics ENABLE ROW LEVEL SECURITY;
 
 -- Profiles policies
-create policy "Public profiles are viewable by everyone"
-  on public.profiles for select
-  using (true);
+CREATE POLICY "Public profiles viewable by everyone"
+  ON public.profiles FOR SELECT
+  USING (true);
 
-create policy "Users can update own profile"
-  on public.profiles for update
-  using (auth.uid() = id);
+CREATE POLICY "Users can update own profile"
+  ON public.profiles FOR UPDATE
+  USING (auth.uid() = id);
 
-create policy "Users can insert own profile"
-  on public.profiles for insert
-  with check (auth.uid() = id);
+CREATE POLICY "Users can insert own profile"
+  ON public.profiles FOR INSERT
+  WITH CHECK (auth.uid() = id);
 
 -- Links policies
-create policy "Links are viewable by everyone"
-  on public.links for select
-  using (true);
+CREATE POLICY "Links viewable by everyone"
+  ON public.links FOR SELECT
+  USING (true);
 
-create policy "Users can insert own links"
-  on public.links for insert
-  with check (auth.uid() = user_id);
+CREATE POLICY "Users can insert own links"
+  ON public.links FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
 
-create policy "Users can update own links"
-  on public.links for update
-  using (auth.uid() = user_id);
+CREATE POLICY "Users can update own links"
+  ON public.links FOR UPDATE
+  USING (auth.uid() = user_id);
 
-create policy "Users can delete own links"
-  on public.links for delete
-  using (auth.uid() = user_id);
+CREATE POLICY "Users can delete own links"
+  ON public.links FOR DELETE
+  USING (auth.uid() = user_id);
 
--- Analytics policies (write only, admin read)
-create policy "Anyone can insert analytics"
-  on public.analytics for insert
-  with check (true);
+-- Analytics policies
+CREATE POLICY "Anyone can insert analytics"
+  ON public.analytics FOR INSERT
+  WITH CHECK (true);
 
 -- Create indexes
-create index profiles_username_idx on public.profiles(username);
-create index links_user_id_idx on public.links(user_id);
-create index links_order_idx on public.links("order");
-create index analytics_username_idx on public.analytics(username);
-create index analytics_link_id_idx on public.analytics(link_id);
-create index analytics_timestamp_idx on public.analytics(timestamp);
+CREATE INDEX IF NOT EXISTS profiles_username_idx ON public.profiles(username);
+CREATE INDEX IF NOT EXISTS links_user_id_idx ON public.links(user_id);
+CREATE INDEX IF NOT EXISTS links_order_idx ON public.links("order");
+CREATE INDEX IF NOT EXISTS analytics_username_idx ON public.analytics(username);
+CREATE INDEX IF NOT EXISTS analytics_link_id_idx ON public.analytics(link_id);
+CREATE INDEX IF NOT EXISTS analytics_timestamp_idx ON public.analytics(timestamp);
 
--- Create function to update updated_at timestamp
-create or replace function public.handle_updated_at()
-returns trigger as $$
-begin
-  new.updated_at = now();
-  return new;
-end;
-$$ language plpgsql;
+-- Updated_at trigger
+CREATE OR REPLACE FUNCTION public.handle_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
--- Create trigger for updated_at
-create trigger set_updated_at
-  before update on public.profiles
-  for each row
-  execute function public.handle_updated_at();
+CREATE TRIGGER set_updated_at
+  BEFORE UPDATE ON public.profiles
+  FOR EACH ROW
+  EXECUTE FUNCTION public.handle_updated_at();
 
--- Create function to create profile on signup
-create or replace function public.handle_new_user()
-returns trigger as $$
-begin
-  insert into public.profiles (id, username)
-  values (new.id, split_part(new.email, '@', 1));
-  return new;
-end;
-$$ language plpgsql security definer;
+-- Auto-create profile on signup
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public.profiles (id, username)
+  VALUES (NEW.id, SPLIT_PART(NEW.email, '@', 1));
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- Create trigger for new user
-create trigger on_auth_user_created
-  after insert on auth.users
-  for each row
-  execute function public.handle_new_user();
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW
+  EXECUTE FUNCTION public.handle_new_user();

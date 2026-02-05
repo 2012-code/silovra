@@ -6,9 +6,9 @@ import { Toaster } from 'react-hot-toast'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Silovra - Beautiful Link in Bio Pages',
-  description: 'Create stunning link in bio pages with advanced features. Better than Linktree, half the price.',
-  keywords: 'link in bio, linktree alternative, social media links, instagram bio link',
+  title: 'Silovra - Beautiful Link Pages for Creators',
+  description: 'Create stunning, animated link pages. Share everything you do in one place.',
+  keywords: 'link in bio, social media links, creator tools, link page',
 }
 
 export default function RootLayout({
@@ -20,7 +20,16 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         {children}
-        <Toaster position="top-center" />
+        <Toaster 
+          position="top-center"
+          toastOptions={{
+            duration: 4000,
+            style: {
+              background: '#0f766e',
+              color: '#fff',
+            },
+          }}
+        />
       </body>
     </html>
   )
