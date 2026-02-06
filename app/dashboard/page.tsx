@@ -39,8 +39,7 @@ export default function Dashboard() {
   const [username, setUsername] = useState('')
   const [bio, setBio] = useState('')
   const [selectedTheme, setSelectedTheme] = useState<ThemeKey>('emerald')
-  const [selectedTheme, setSelectedTheme] = useState<ThemeKey>('emerald')
-  const currentTheme = currentTheme || themes.emerald  // ADD THIS LINE
+  const currentTheme = themes[selectedTheme] || themes.emerald
   const router = useRouter()
 
   useEffect(() => {
