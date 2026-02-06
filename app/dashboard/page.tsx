@@ -531,81 +531,51 @@ export default function Dashboard() {
           </div>
 
           {/* Right Column - Live Preview */}
-          <div className="lg:col-span-2">
-            <div className="lg:sticky lg:top-24">
-              <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-6">
-                <h2 className="text-lg font-bold text-white mb-4 flex items-center">
-                  <Eye className="w-5 h-5 mr-2" />
-                  Live Preview
-                </h2>
-                
-                <div className="aspect-[9/16] max-w-[280px] mx-auto bg-white/10 rounded-3xl overflow-hidden shadow-2xl">
-                  <div 
-                    className="h-full p-8 flex flex-col items-center justify-center"
-                    style={{ background: theme.styles.background }}
-                  >
-                    {/* Profile Section */}
-                    <div className="mb-8 text-center">
-                      <div 
-                        className="w-20 h-20 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold"
-                        style={{ 
-                          background: theme.styles.profileBg,
-                          color: theme.styles.buttonText,
-                        }}
-                      >
-                        {username ? username.charAt(0).toUpperCase() : '?'}
-                      </div>
-                      <h3 className="text-white font-bold text-lg mb-2">
-                        @{username || 'yourname'}
-                      </h3>
-                      {bio && (
-                        <p className="text-white/80 text-sm px-2">{bio}</p>
-                      )}
-                    </div>
-
-                    {/* Links */}
-                    <div className="space-y-3 w-full">
-                      {links.length === 0 ? (
-                        <div className="text-center text-white/60 text-sm py-8">
-                          Your links will appear here
-                        </div>
-                      ) : (
-                        links.slice(0, 4).map((link, index) => (
-                          <div
-                            key={link.id}
-                            className={`w-full px-4 py-3 rounded-xl text-white text-center font-medium transition-all animate-${theme.styles.animation}`}
-                            style={{
-                              background: theme.styles.buttonBg,
-                              border: theme.styles.buttonBorder,
-                              boxShadow: theme.styles.boxShadow,
-                              animationDelay: `${index * 0.1}s`,
-                            }}
-                          >
-                            <div className="truncate">{link.title}</div>
-                          </div>
-                        ))
-                      )}
-                      {links.length > 4 && (
-                        <div className="text-center text-white/40 text-xs">
-                          +{links.length - 4} more
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Badge */}
-                    {!profile?.is_pro && (
-                      <div className="mt-8 text-white/40 text-xs">
-                        Made with Silovra
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+<div className="aspect-[9/16] max-w-[280px] mx-auto bg-white/10 rounded-3xl overflow-hidden shadow-2xl">
+  {themes[selectedTheme] ? (
+    <div 
+      className="h-full p-8 flex flex-col items-center justify-center"
+      style={{ background: themes[selectedTheme].styles.background }}
+    >
+      <div className="mb-8 text-center">
+        <div 
+          className="w-20 h-20 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold"
+          style={{ 
+            background: themes[selectedTheme].styles.profileBg,
+            color: themes[selectedTheme].styles.buttonText,
+          }}
+        >
+          {username ? username.charAt(0).toUpperCase() : '?'}
         </div>
+        <h3 className="text-white font-bold text-lg mb-2">
+          @{username || 'yourname'}
+        </h3>
+        {bio && <p className="text-white/80 text-sm px-2">{bio}</p>}
+      </div>
+      <div className="space-y-3 w-full">
+        {links.length === 0 ? (
+          <div className="text-center text-white/60 text-sm py-8">
+            Your links will appear here
+          </div>
+        ) : (
+          links.slice(0, 4).map((link, index) => (
+            <div
+              key={link.id}
+              className="w-full px-4 py-3 rounded-xl text-white text-center font-medium"
+              style={{
+                background: themes[selectedTheme].styles.buttonBg,
+                border: themes[selectedTheme].styles.buttonBorder,
+              }}
+            >
+              <div className="truncate">{link.title}</div>
+            </div>
+          ))
+        )}
       </div>
     </div>
-  )
-}
-
+  ) : (
+    <div className="h-full flex items-center justify-center text-white">
+      Loading...
+    </div>
+  )}
+</div>
