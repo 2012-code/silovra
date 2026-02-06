@@ -39,8 +39,13 @@ export default function Dashboard() {
   const [username, setUsername] = useState('')
   const [bio, setBio] = useState('')
   const [selectedTheme, setSelectedTheme] = useState<ThemeKey>('emerald')
-  const currentTheme = themes[selectedTheme] || themes.emerald
+  
   const router = useRouter()
+
+  // Safe theme getter
+  const getTheme = (themeKey: ThemeKey) => {
+    return themes[themeKey] || themes.emerald
+  }
 
   useEffect(() => {
     checkUser()
@@ -78,9 +83,9 @@ export default function Dashboard() {
         setProfile(data)
         setUsername(data.username || '')
         setBio(data.bio || '')
-        setSelectedTheme((data.theme as ThemeKey) || 'emerald')
+        const userTheme = (data.theme as ThemeKey) || 'emerald'
+        setSelectedTheme(themes[userTheme] ? userTheme : 'emerald')
       } else if (error && error.code === 'PGRST116') {
-        // Profile doesn't exist, create one
         const defaultUsername = user?.email?.split('@')[0] || 'user'
         await supabase.from('profiles').insert({
           id: userId,
@@ -182,7 +187,7 @@ export default function Dashboard() {
     }
 
     try {
-      const { error} = await supabase
+      const { error } = await supabase
         .from('profiles')
         .upsert({
           id: user.id,
@@ -219,6 +224,8 @@ export default function Dashboard() {
     navigator.clipboard.writeText(link)
     toast.success('Link copied!')
   }
+
+  const theme = getTheme(selectedTheme)
 
   if (loading) {
     return (
@@ -324,7 +331,7 @@ export default function Dashboard() {
         </div>
 
         <div className="grid lg:grid-cols-5 gap-8">
-          {/* Left Column - Main Content (3/5 width) */}
+          {/* Left Column - Main Content */}
           <div className="lg:col-span-3 space-y-6">
             {activeTab === 'links' && (
               <>
@@ -403,14 +410,12 @@ export default function Dashboard() {
                               target="_blank"
                               rel="noopener noreferrer"
                               className="p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-                              title="Open link"
                             >
                               <ExternalLink className="w-4 h-4" />
                             </a>
                             <button
                               onClick={() => handleDeleteLink(link.id)}
                               className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
-                              title="Delete link"
                             >
                               <Trash2 className="w-4 h-4" />
                             </button>
@@ -428,11 +433,11 @@ export default function Dashboard() {
                 <h2 className="text-xl font-bold text-white mb-4">Choose Your Theme</h2>
                 
                 <div className="grid grid-cols-2 gap-4 mb-6">
-                  {Object.entries(themes).map(([key, theme]) => (
+                  {Object.entries(themes).map(([key, themeData]) => (
                     <button
                       key={key}
                       onClick={() => {
-                        if (theme.free || profile?.is_pro) {
+                        if (themeData.free || profile?.is_pro) {
                           setSelectedTheme(key as ThemeKey)
                         } else {
                           toast.error('Upgrade to Pro to use premium themes')
@@ -442,16 +447,16 @@ export default function Dashboard() {
                         selectedTheme === key
                           ? 'border-teal-500 bg-teal-500/20 shadow-lg'
                           : 'border-white/20 bg-white/5 hover:bg-white/10'
-                      } ${!theme.free && !profile?.is_pro ? 'opacity-60' : ''}`}
+                      } ${!themeData.free && !profile?.is_pro ? 'opacity-60' : ''}`}
                     >
-                      <div className="text-4xl mb-2">{theme.preview}</div>
-                      <div className="text-white font-medium">{theme.name}</div>
-                      {!theme.free && !profile?.is_pro && (
+                      <div className="text-4xl mb-2">{themeData.preview}</div>
+                      <div className="text-white font-medium">{themeData.name}</div>
+                      {!themeData.free && !profile?.is_pro && (
                         <div className="absolute top-2 right-2">
                           <Crown className="w-5 h-5 text-yellow-400" />
                         </div>
                       )}
-                      {theme.free && (
+                      {themeData.free && (
                         <div className="absolute top-2 right-2 text-xs text-teal-400 font-medium">
                           FREE
                         </div>
@@ -525,7 +530,7 @@ export default function Dashboard() {
             )}
           </div>
 
-          {/* Right Column - Live Preview (2/5 width) */}
+          {/* Right Column - Live Preview */}
           <div className="lg:col-span-2">
             <div className="lg:sticky lg:top-24">
               <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-6">
@@ -537,15 +542,15 @@ export default function Dashboard() {
                 <div className="aspect-[9/16] max-w-[280px] mx-auto bg-white/10 rounded-3xl overflow-hidden shadow-2xl">
                   <div 
                     className="h-full p-8 flex flex-col items-center justify-center"
-                    style={{ background: currentTheme.styles.background }}
+                    style={{ background: theme.styles.background }}
                   >
                     {/* Profile Section */}
                     <div className="mb-8 text-center">
                       <div 
                         className="w-20 h-20 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold"
                         style={{ 
-                          background: currentTheme.styles.profileBg,
-                          color: currentTheme.styles.buttonText,
+                          background: theme.styles.profileBg,
+                          color: theme.styles.buttonText,
                         }}
                       >
                         {username ? username.charAt(0).toUpperCase() : '?'}
@@ -568,11 +573,11 @@ export default function Dashboard() {
                         links.slice(0, 4).map((link, index) => (
                           <div
                             key={link.id}
-                            className={`w-full px-4 py-3 rounded-xl text-white text-center font-medium transition-all animate-${currentTheme.styles.animation}`}
+                            className={`w-full px-4 py-3 rounded-xl text-white text-center font-medium transition-all animate-${theme.styles.animation}`}
                             style={{
-                              background: currentTheme.styles.buttonBg,
-                              border: currentTheme.styles.buttonBorder,
-                              boxShadow: currentTheme.styles.boxShadow,
+                              background: theme.styles.buttonBg,
+                              border: theme.styles.buttonBorder,
+                              boxShadow: theme.styles.boxShadow,
                               animationDelay: `${index * 0.1}s`,
                             }}
                           >
@@ -603,3 +608,4 @@ export default function Dashboard() {
     </div>
   )
 }
+
